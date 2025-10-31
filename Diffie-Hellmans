@@ -1,0 +1,41 @@
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+public class DiffieHellman {
+
+    public static void main(String[] args) throws Exception {
+
+        SecureRandom random = new SecureRandom();
+
+        // Step 1: Choose a large prime p and primitive root g
+        BigInteger p = BigInteger.probablePrime(512, random);
+        BigInteger g = new BigInteger("5"); // Common choice
+        
+        System.out.println("Public Prime (p): " + p);
+        System.out.println("Public Base (g): " + g);
+
+        // Step 2: Alice and Bob choose private keys (random secret numbers)
+        BigInteger a = new BigInteger(512, random); // Alice's private key
+        BigInteger b = new BigInteger(512, random); // Bob's private key
+
+        System.out.println("\nAlice Private Key (a): " + a);
+        System.out.println("Bob Private Key (b): " + b);
+
+        // Step 3: Both compute their public values
+        BigInteger A = g.modPow(a, p); // Alice public key
+        BigInteger B = g.modPow(b, p); // Bob public key
+
+        System.out.println("\nAlice Public Key (A): " + A);
+        System.out.println("Bob Public Key (B): " + B);
+
+        // Step 4: Exchange A and B, compute shared secret
+        BigInteger sharedSecretAlice = B.modPow(a, p);
+        BigInteger sharedSecretBob = A.modPow(b, p);
+
+        System.out.println("\nShared Secret computed by Alice: " + sharedSecretAlice);
+        System.out.println("Shared Secret computed by Bob:   " + sharedSecretBob);
+
+        // Check if both are equal
+        System.out.println("\nMatch? " + sharedSecretAlice.equals(sharedSecretBob));
+    }
+}
